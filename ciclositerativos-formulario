@@ -1,0 +1,186 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Sistema_de_calificaciones_ARL
+{
+    public partial class frmCalificaciones : Form
+    { 
+        //Crear la ArrayList (ctrl + . para que la reconozca, crearla en el "public partial class" para que sea accesible desde culquier parte del formulario
+        ArrayList Estudiantes = new ArrayList();
+
+        public frmCalificaciones()
+        {
+            InitializeComponent();
+        }
+
+        private void dtgEstudiantes_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void frmCaificaciones_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnIngresar_Click(object sender, EventArgs e)
+        {
+            //Definir variable calculo promedio
+            Double CalProm;
+
+            //Creación del objeto que recibira la información
+            Estudiantes nEstudiantes = new Estudiantes();
+
+            //Definir elementos del objeto
+            nEstudiantes.Nombre = txtNombre.Text;
+            nEstudiantes.Nota1 = Double.Parse(txtNota1.Text);
+            nEstudiantes.Nota2 = Double.Parse(txtNota2.Text);
+            nEstudiantes.Nota3 = Double.Parse(txtNota3.Text);
+            nEstudiantes.Nota4 = Double.Parse(txtNota4.Text);
+            nEstudiantes.Nota5 = Double.Parse(txtNota5.Text);
+
+                //Validaciones campos
+
+                //Validación nEstudiantes.Nombre
+                if (nEstudiantes.Nombre == "")
+                {
+                    MessageBox.Show("Campo nombre esta vacio, ingrese nombre por favor", "EROR");
+                    txtNombre.Focus();
+                    return;
+                }
+
+                //Validación nEstudiantes.Nota1 
+                if (nEstudiantes.Nota1 < 0 || nEstudiantes.Nota1 > 5)
+                {
+                    MessageBox.Show("Ingresa una nota valida en el campo 1 por favor", "ERROR");
+                    txtNota1.Focus();
+                    return;
+                }
+
+                //Validación nEstudiantes.Nota2
+                if (nEstudiantes.Nota2 < 0 || nEstudiantes.Nota2 > 5)
+                {
+                    MessageBox.Show("Ingresa una nota valida en el campo 2 por favor", "ERROR");
+                    txtNota1.Focus();
+                    return;
+                }
+
+                //Validación nEstudiantes.Nota3
+                if (nEstudiantes.Nota3 < 0 || nEstudiantes.Nota3 > 5)
+                {
+                    MessageBox.Show("Ingresa una nota valida en el campo 3 por favor", "ERROR");
+                    txtNota1.Focus();
+                    return;
+                }
+
+                //Validación nEstudiantes.Nota4
+                if (nEstudiantes.Nota4 < 0 || nEstudiantes.Nota4 > 5)
+                {
+                    MessageBox.Show("Ingresa una nota valida en el campo 4 por favor", "ERROR");
+                    txtNota1.Focus();
+                    return;
+                }
+
+                //Validación nEstudiantes.Nota5
+                if (nEstudiantes.Nota5 < 0 || nEstudiantes.Nota5 > 5)
+                {
+                    MessageBox.Show("Ingresa una nota valida en el campo 5 por favor", "ERROR");
+                    txtNota1.Focus();
+                    return;
+                }
+
+
+            //Operación para calcular el promedio
+            CalProm = (nEstudiantes.Nota1 + nEstudiantes.Nota2 + nEstudiantes.Nota3 + nEstudiantes.Nota4 + nEstudiantes.Nota5) / 5;
+
+            //Se modifica la variable CalProm para que redondee a 2 decimales
+            CalProm = Math.Round(CalProm, 2);
+
+            nEstudiantes.Promedio = CalProm;
+
+            //Condicional para definir si el estudiante aprobo o reprobo
+            if (CalProm < 3)
+            {
+                nEstudiantes.Resultado = "REPROBADO";
+            }
+            else
+            {
+                nEstudiantes.Resultado = "APROBADO";
+            }
+
+            //Agregar el objeto al DataGridView e ir acumulando los datos
+            Estudiantes.Add(nEstudiantes);
+            dtgEstudiantes.DataSource = null;
+            dtgEstudiantes.DataSource = Estudiantes;
+
+            //Limpiar datos en los textbox para que se pueda digitar de inmediato los demás datos
+            txtNombre.Clear();
+            txtNota1.Clear();
+            txtNota2.Clear();
+            txtNota3.Clear();
+            txtNota4.Clear();
+            txtNota5.Clear();
+
+            txtNombre.Focus();
+        }
+
+        private void btnExcel_Click(object sender, EventArgs e)
+        {
+            exportarexcel(dtgEstudiantes);
+        }
+        // Se agrega "public void" llamado exportarexcel que llama a la tabla de DatagridView
+        public void exportarexcel(DataGridView tabla)
+        {
+            //Se llama a la referencia de Microsoft Excel, para crear archivo de excel desde 0
+            Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+
+            //Agregar hoja
+            excel.Application.Workbooks.Add(true);
+
+            //Indice columnas
+            int IndiceColumna = 0;
+
+            //Recorre las columnas del DataGrid
+            foreach (DataGridViewColumn col in tabla.Columns)
+            {
+                //Aumento de de columnas en el DataGrid y en el archivo de excel 
+                IndiceColumna++;
+                excel.Cells[1, IndiceColumna] = col.Name;
+            }
+
+            //Indice Filas
+            int IndiceFila = 0;
+
+            //Recorre las filas del DataGrid
+            foreach (DataGridViewRow row in tabla.Rows)
+            {
+                //Se pasa aumentar las filas
+                IndiceFila++;
+
+                //Indice columna vuelve a 0 para que se haga de nuevo el recorrido, para ir fila por fila y columna por columna
+                IndiceColumna = 0;
+
+                foreach (DataGridViewColumn col in tabla.Columns)
+                {
+
+                    IndiceColumna++;
+
+                    excel.Cells[IndiceFila + 1, IndiceColumna] = row.Cells[col.Name].Value;
+                }
+            }
+    
+                //Para que aparezca el archivo excel
+                excel.Visible = true;
+
+            }
+
+    }
+}
