@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Sistema_de_calificaciones_ARL
+namespace Sistema_de_calificaciones
 {
     public partial class frmCalificaciones : Form
     { 
