@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sistema_de_calificaciones_ARL
+namespace Sistema_de_calificaciones
 {
     class Estudiantes
     {
