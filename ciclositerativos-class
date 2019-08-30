@@ -1,0 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Sistema_de_calificaciones_ARL
+{
+    class Estudiantes
+    {
+        //Declaración de las variables Nombre, notas, promedio y resultado
+        public string Nombre { get; set; }
+        public Double Nota1 { get; set; }
+        public Double Nota2 { get; set; }
+        public Double Nota3 { get; set; }
+        public Double Nota4 { get; set; }
+        public Double Nota5 { get; set; }
+        public Double Promedio { get; set; }
+        public string Resultado { get; set; }
+    }
+}
